@@ -2,7 +2,7 @@ const keys = require("./keys");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const authRoutes = require("./authRoutesS")
+const authRoutes = require("./authRoutes")
 //const authRoutes = require("authRoutes");
 const { exec } = require("child_process");
 
