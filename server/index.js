@@ -1,51 +1,49 @@
 const keys = require("./keys");
-
-// Express Application setup
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const authRoutes = require("./authRoutesS")
+//const authRoutes = require("authRoutes");
+const { exec } = require("child_process");
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Postgres client setup
-const { Pool } = require("pg");
-const pgClient = new Pool({
-  user: keys.pgUser,
-  host: keys.pgHost,
-  database: keys.pgDatabase,
-  password: keys.pgPassword,
-  port: keys.pgPort
-});
+const pgClient = require("./db");
 
 pgClient.on("connect", client => {
   client
-    .query("CREATE TABLE IF NOT EXISTS values (number INT)")
+    .query("CREATE TABLE IF NOT EXISTS gkc_user_data (Id BIGINT PRIMARY KEY, Name VARCHAR(255), Email VARCHAR(255), Phone VARCHAR(20), Password VARCHAR(255), signup_time TIMESTAMPTZ)")
     .catch(err => console.log("PG ERROR", err));
 });
 
-//Express route definitions
-app.get("/", (req, res) => {
-  res.send("Hi");
+app.get("/gkc_user_data", async (req, res) => {
+  try {
+    const result = await pgClient.query("SELECT * FROM gkc_user_data");
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
 });
 
-// get the values
-app.get("/values/all", async (req, res) => {
-  const values = await pgClient.query("SELECT * FROM values");
+app.post('/run-mvn-install', (req, res) => {
+  const cwd = 'C:\\Users\\sutik\\IdeaProjects\\gkc-aws-pipeline';
 
-  res.send(values);
+  exec('mvn clean install', { cwd }, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`exec error: ${error}`);
+      res.status(500).send('Failed to execute mvn install command');
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.error(`stderr: ${stderr}`);
+    res.sendFile('C:\\Users\\sutik\\IdeaProjects\\gkc-aws-pipeline\\target\\gkc-aws-pipeline-1.0-SNAPSHOT.jar');
+  });
 });
 
-// now the post -> insert value
-app.post("/values", async (req, res) => {
-  if (!req.body.value) res.send({ working: false });
+app.use('/api/auth', authRoutes);
 
-  pgClient.query("INSERT INTO values(number) VALUES($1)", [req.body.value]);
-
-  res.send({ working: true });
-});
-
-app.listen(5000, err => {
-  console.log("Listening");
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
