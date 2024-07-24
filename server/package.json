@@ -6,11 +6,14 @@
   "author": "Laszlo Leber (Codeching)",
   "license": "ISC",
   "dependencies": {
-    "express": "4.16.3",
-    "pg": "8.0.3",
+    "body-parser": "*",
+    "chokidar": "^3.6.0",
     "cors": "2.8.4",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
     "nodemon": "1.18.3",
-    "body-parser": "*"
+    "pg": "^8.12.0",
+    "react-router-dom": "^6.25.1"
   },
   "scripts": {
     "dev": "nodemon",

@@ -44,6 +44,7 @@ app.post('/run-mvn-install', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+const port = process.env.PORT || 5000; // Define 'port'
+app.listen(port, () => { // Use 'port'
+  console.log(`Server running on port ${port}`); // Use 'port'
 });
