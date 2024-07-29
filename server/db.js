@@ -2,11 +2,9 @@ const { Pool } = require('pg');
 const keys = require('./keys');
 
 const pool = new Pool({
-  user: keys.pgUser,
-  host: keys.pgHost,
-  database: keys.pgDatabase,
-  password: keys.pgPassword,
-  port: keys.pgPort
+  // connectionString: keys.DATABASE_URL,
+  connectionString: keys.dbURL,
+  ssl: false // Disable SSL
 });
 
 module.exports = pool;

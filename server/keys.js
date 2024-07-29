@@ -1,7 +1,9 @@
+require("dotenv").config();
 module.exports = {
-  pgUser: process.env.PGUSER,
-  pgHost: process.env.PGHOST,
-  pgDatabase: process.env.PGDATABASE,
-  pgPassword: process.env.PGPASSWORD,
-  pgPort: process.env.PGPORT
+  // pgUser: process.env.PGUSER,
+  // pgHost: process.env.PGHOST,
+  // pgDatabase: process.env.PGDATABASE,
+  // pgPassword: process.env.PGPASSWORD,
+  // pgPort: process.env.PGPORT,
+  dbURL: process.env.DB_URL
 };
